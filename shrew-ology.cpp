@@ -25,10 +25,12 @@ vector<shrew> son;
 map<string,vector<string> > result;
 
 void solve(string s){
+	
 	for( int i = 0; i < male.size(); ++i ){
 		for( int j = 0; j < female.size(); ++j ){
+			
 			string ans="";
-			for( int k = 0; k < s.size(); ++k ){				
+			for( int k = 0; k < s.size(); ++k ){
 				ans = ans + "0";
 				string father = male[i].second, mother = female[j].second;
 				if( s[k] == 'R' && father[k] == '1' && mother[k] == '1' ) ans[k]='1';
@@ -42,16 +44,19 @@ void solve(string s){
 int main(){
 	string s,name,sex,c,grandson;
 	while( cin >> s ){
+		
 		while( cin >> name && name!="***" ){
 			cin  >> sex >> c;
 			if( sex == "M" ) male.push_back( shrew(name,c) );
 			else female.push_back( shrew(name,c) );
 		}
+		
 		while(cin >> name && name!="***"){
 			cin >> c;
 			son.push_back( shrew(name,c) );
 		}
 		solve(s);
+		
 		for( int i = 0; i < son.size(); ++i ){
 			string goal = son[i].second;
 			vector<string> p = result[goal];
@@ -65,6 +70,7 @@ int main(){
 			}
 			puts("");
 		}
+		
 	}
 	return 0;
 }
