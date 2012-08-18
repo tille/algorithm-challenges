@@ -25,7 +25,7 @@ template <class T> string to_str(const T &x)
 { stringstream s; s << x; return s.str(); }
 
 int main(){
-  int t = 1, cosa = 10e4-3,s_size;
+  int t = 100, cosa = 10e4-8,s_size;
   string s;
   freopen("addicted_in.txt","w",stdout);
   cout << t << endl;
