@@ -1,0 +1,12 @@
+// BEGIN CUT HERE
+
+// END CUT HERE
+#line 5 "Time.cpp"
+#include <string>
+#include <vector>
+class Time {
+	public:
+	string whatTime(int seconds) {
+		
+	}
+};
