@@ -9,6 +9,7 @@
 using namespace std;
 
 class Justifier{
+
 public:
   vector<string> justify(vector<string> textIn){
     char empty[60];
