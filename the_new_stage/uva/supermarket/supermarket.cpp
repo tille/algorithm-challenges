@@ -19,8 +19,9 @@ vector<double> prices;
 double dp_calc(int n, int m){
   for( int i = 1; i <= n; ++i ){
     for( int j = 1; j <= m; ++j ){
-      if( list[i-1] == products[j-1] ) dp[i][j] = min( dp[i][j-1], dp[i-1][j-1]+prices[j-1] );
-      else dp[i][j] = dp[i][j-1];
+      if( list[i-1] == products[j-1] ){
+        dp[i][j] = (dp[i-1][j-1] == double(inf))?inf:min( dp[i][j-1], dp[i-1][j-1]+prices[j-1] );
+      }else dp[i][j] = dp[i][j-1];
     }
   }
   
@@ -51,7 +52,7 @@ int main(){
 
     double ans = dp_calc(n,m);
     if( int(ans) == inf ) cout << "Impossible" << endl;
-    else printf("%.2f\n ",ans);
+    else printf("%.2f\n",ans);
     
     // for( int i = 1; i <= n; ++i ){
     //   for( int j = 1; j <= m; ++j ){
