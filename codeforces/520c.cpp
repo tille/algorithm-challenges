@@ -2,7 +2,6 @@
 #include <string>
 #include <cstring>
 #include <utility>
-#include <sstream>
 
 using namespace std;
 
@@ -50,7 +49,7 @@ int main(int argc, char *argv[]) {
   cin >> n >> s;
 
   most_repeated_character(s);
-  result = (maxx==n) ? 1 : cpot(max_counter, n)%K;
+  result = cpot(max_counter, n)%K;
 
   cout << result << endl;
 
