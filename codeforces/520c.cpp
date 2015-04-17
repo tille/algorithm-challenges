@@ -2,11 +2,13 @@
 #include <string>
 #include <cstring>
 #include <utility>
+#include <sstream>
 
 using namespace std;
 
 #define MAXN 300
 #define K 1000000007
+#define ll long long
 
 int letters[MAXN];
 int maxx, max_counter;
@@ -31,15 +33,15 @@ void most_repeated_character(string s) {
   }
 }
 
-int cpot(int m, int n) {
+ll cpot(ll m, ll n) {
   if( n%2 == 0 ) {
-    return (n == 2) ? ( m%K * m%K )%K : cpot(cpot(m, n/2), 2);
+    return (n == 2) ? ( m%K * m%K )%K : cpot(cpot(m, n/2)%K, 2)%K;
   } else {
     return (n == 1) ? m : (cpot(m, n-1)%K * m%K)%K;
   }
 }
 
-int main() {
+int main(int argc, char *argv[]) {
   int n, k, result;
   string s;
 
@@ -48,7 +50,7 @@ int main() {
   cin >> n >> s;
 
   most_repeated_character(s);
-  result = (maxx==n) ? 1 : cpot(max_counter, n);
+  result = (maxx==n) ? 1 : cpot(max_counter, n)%K;
 
   cout << result << endl;
 
