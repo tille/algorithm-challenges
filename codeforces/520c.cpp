@@ -48,7 +48,7 @@ int main() {
   cin >> n >> s;
 
   most_repeated_character(s);
-  result = (maxx==n) ? 1 : cpot(maxx*max_counter, n);
+  result = (maxx==n) ? 1 : cpot(max_counter, n);
 
   cout << result << endl;
 
