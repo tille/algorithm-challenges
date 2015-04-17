@@ -33,7 +33,7 @@ void most_repeated_character(string s) {
 
 int cpot(int m, int n) {
   if( n%2 == 0 ) {
-    return (n == 2) ? ( m%K * m%K )%K : cpot(m, n/2);
+    return (n == 2) ? ( m%K * m%K )%K : cpot(cpot(m, n/2), 2);
   } else {
     return (n == 1) ? m : (cpot(m, n-1)%K * m%K)%K;
   }
