@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <stdio.h>
 
 using namespace std;
 
@@ -9,18 +10,12 @@ vector<int> lanterns;
 double generate(int l) {
   vector<double> radius;
 
-  if(lanterns[0]!=0) radius.push_back( lanterns[0] );
+  // calc radius points
+  int max_elm = 2*max(lanterns[0], l-lanterns[lanterns.size()-1]);
   for( int i=0; i<lanterns.size()-1; ++i ) {
-    int dist = lanterns[i+1] - lanterns[i];
-    radius.push_back(dist/2.0);
+    max_elm = max(max_elm, lanterns[i+1] - lanterns[i]);
   }
-  if(lanterns[lanterns.size()-1]!=l) radius.push_back(l-lanterns[lanterns.size()-1]);
 
-  double max_elm = -1;
-  for( int i=0; i<radius.size(); ++i) {
-    if (radius[i]>max_elm)
-      max_elm = radius[i];
-  }
   return max_elm;
 }
 
@@ -36,7 +31,12 @@ int main() {
 
   sort(lanterns.begin(), lanterns.end());
 
-  cout << generate(l) << endl;
+  double rez = generate(l);
+
+  // error precision doesn't work with cout
+
+  // cout << rez/2.0 << endl;
+  printf("%.10f\n",rez/2.0);
 
   return 0;
 }
