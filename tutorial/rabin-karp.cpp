@@ -4,40 +4,46 @@
 
 using namespace std;
 
+#define K 10000
+
+int text_keys[K];
+
 int hash( string pattern ) {
   double b = 101;
   double m = pattern.size()-1;
   int mirror_it;
+  int hash_key = 0;
 
   for ( int it = 0; it < m; ++it ) {
-    mirror_it = int(m) - it;
-    hash_key += pattern[it]-'0' * int( pow(b, mirror_it) );
+    mirror_it = int( m ) - it;
+    hash_key += int( pattern[it] ) * int( pow( b, mirror_it ) );
   }
 
   return hash_key;
 }
 
-int text_hash( string text, int i, int m ) {
-  int result;
-  if ( i == 0 ) 
-    result = hash( text.substr(0, m) );
-  else {
-    old_elm = text[i-m]-'0' * int( pow(b, mirror_it) );
-    result = (( text_keys[i-1] - old_elm ) * b) + text[i]-'0';
-  }
+void fill_text_keys( string text, int m ) {
+  double b = 101;
 
-  return text_keys[i] = result;
+  for( int it = 0; it+m <= m; ++it ) {
+    if ( it == 0 ) 
+      text_keys[0] = hash( text.substr(0, m) );
+    else {
+      int old_elm = text[it-m]-'0' * int( pow(b, m-1) );
+      text_keys[it] = (( text_keys[it-1] - old_elm ) * b) + int( text[it] );
+    }
+  }
 }
 
 int rabin_karp( string text, string pattern ) {
   int found = 0,
       m = pattern.size(),
       pattern_hash = hash( pattern );
-      chunk_hash;
 
-  for ( int i = 0; i+m <= text.size; ++i ) {
-    chunk_hash = text_hash( text, i, m );
-    if ( chunk_hash == pattern_hash ) {
+  fill_text_keys( text, m );
+
+  for ( int i = 0; i+m <= text.size(); ++i ) {
+    if ( text_keys[i] == pattern_hash ) {
       found = 1;
       break;
     }
@@ -46,10 +52,13 @@ int rabin_karp( string text, string pattern ) {
 }
 
 int main() {
-  string text = '';
-  string pattern = '';
+  // string text = '';
+  string pattern = "123";
 
-  int found = rabin_karp();
-  cout << "pattern found on the text: " << found << endl;
+  // int found = rabin_karp();
+  // cout << "pattern found on the text: " << found << endl;
+  
+  cout << hash( pattern ) << endl;
+  
   return 0;
 }
