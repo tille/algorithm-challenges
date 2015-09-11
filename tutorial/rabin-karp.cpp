@@ -8,13 +8,13 @@ using namespace std;
 
 int text_keys[K];
 
-int hash( string pattern ) {
+int hashing( string pattern ) {
   double b = 101;
   double m = pattern.size()-1;
   int mirror_it;
   int hash_key = 0;
 
-  for ( int it = 0; it < m; ++it ) {
+  for ( int it = 0; it <= m; ++it ) {
     mirror_it = int( m ) - it;
     hash_key += int( pattern[it] ) * int( pow( b, mirror_it ) );
   }
@@ -25,11 +25,11 @@ int hash( string pattern ) {
 void fill_text_keys( string text, int m ) {
   double b = 101;
 
-  for( int it = 0; it+m <= m; ++it ) {
+  for( int it = 0; it+m <= text.size(); ++it ) {
     if ( it == 0 ) 
-      text_keys[0] = hash( text.substr(0, m) );
+      text_keys[0] = hashing( text.substr(0, m) );
     else {
-      int old_elm = text[it-m]-'0' * int( pow(b, m-1) );
+      int old_elm = text[it-1] * int( pow(b, m-1) );
       text_keys[it] = (( text_keys[it-1] - old_elm ) * b) + int( text[it] );
     }
   }
@@ -38,7 +38,7 @@ void fill_text_keys( string text, int m ) {
 int rabin_karp( string text, string pattern ) {
   int found = 0,
       m = pattern.size(),
-      pattern_hash = hash( pattern );
+      pattern_hash = hashing( pattern );
 
   fill_text_keys( text, m );
 
@@ -53,12 +53,12 @@ int rabin_karp( string text, string pattern ) {
 
 int main() {
   // string text = '';
-  string pattern = "123";
+  string pattern = "3123";
 
   // int found = rabin_karp();
   // cout << "pattern found on the text: " << found << endl;
-  
-  cout << hash( pattern ) << endl;
+  fill_text_keys(pattern, 3);
+  cout << text_keys[1] << endl; 
   
   return 0;
 }
