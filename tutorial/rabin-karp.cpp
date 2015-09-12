@@ -30,7 +30,7 @@ void fill_text_keys( string text, int m ) {
       text_keys[0] = hashing( text.substr(0, m) );
     else {
       int old_elm = text[it-1] * int( pow(b, m-1) );
-      text_keys[it] = (( text_keys[it-1] - old_elm ) * b) + int( text[it] );
+      text_keys[it] = (( text_keys[it-1] - old_elm ) * b) + int( text[it+m-1] );
     }
   }
 }
@@ -44,21 +44,26 @@ int rabin_karp( string text, string pattern ) {
 
   for ( int i = 0; i+m <= text.size(); ++i ) {
     if ( text_keys[i] == pattern_hash ) {
-      found = 1;
-      break;
+      int j = i;
+
+      // add 2-way verification since hash allow key collisions
+      while( j < i+m && text[j] == pattern[j-i] )
+        j++;
+
+      if ( j == i+m ) 
+        found += 1;
     }
   }
   return found;
 }
 
 int main() {
-  // string text = '';
-  string pattern = "3123";
-
-  // int found = rabin_karp();
-  // cout << "pattern found on the text: " << found << endl;
+  string pattern = "123";
+  string text = "312351231123";
   fill_text_keys(pattern, 3);
-  cout << text_keys[1] << endl; 
+
+  int found = rabin_karp(text, pattern);
+  cout << "pattern found on the text: " << found << endl;
   
   return 0;
 }
