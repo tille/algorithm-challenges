@@ -58,9 +58,8 @@ int rabin_karp( string text, string pattern ) {
 }
 
 int main() {
-  string pattern = "123";
-  string text = "312351231123";
-  fill_text_keys(pattern, 3);
+  string pattern = "(XY(XYX))";
+  string text = "((XY(XYX))Y((XY(XYX))YX))";
 
   int found = rabin_karp(text, pattern);
   cout << "pattern found on the text: " << found << endl;
