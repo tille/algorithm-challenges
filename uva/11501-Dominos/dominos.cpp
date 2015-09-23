@@ -1,9 +1,23 @@
-#include <iostream>
-#include <algorithm>
-#include <vector>
-#include <stack>
-
 using namespace std;
+#include <algorithm>
+#include <iostream>
+#include <iterator>
+#include <sstream>
+#include <fstream>
+#include <cassert>
+#include <climits>
+#include <cstdlib>
+#include <cstring>
+#include <string>
+#include <cstdio>
+#include <vector>
+#include <cmath>
+#include <queue>
+#include <deque>
+#include <stack>
+#include <list>
+#include <map>
+#include <set>
 
 #define MAXN 100002
 
@@ -26,7 +40,7 @@ void dfs(int node) {
 
 void topological_sort(int n) {
   path.clear();
-  for (int i = 0; i < n; ++i) visited[i] = false;
+  for (int i = 0; i < n+2; ++i) visited[i] = false;
   for (int i = 0; i < n; ++i) if(!visited[i]) dfs(i);
   reverse(path.begin(), path.end());
 }
@@ -42,7 +56,7 @@ void dfs_2 (int node, int set_label) {
 }
 
 int kosaraju(int n) {
-  for (int i = 0; i < n; ++i) scc[i] = -1;
+  for (int i = 0; i < n+2; ++i) scc[i] = -1;
 
   int set_label = 0;
   for (int i = 0; i < path.size(); ++i) {
@@ -67,8 +81,8 @@ int dominos_count(int n, int number_of_components) {
   int result = 0;
 
   // initialize with true
-  bool comp[number_of_components];
-  for (int i = 0; i < number_of_components; ++i) comp[i] = true; 
+  bool comp[number_of_components+1];
+  for (int i = 0; i <= number_of_components; ++i) comp[i] = true; 
 
   for (int i = 0; i < n; ++i) {
     for (int j =0; j < g[i].size(); ++j) {
@@ -76,7 +90,7 @@ int dominos_count(int n, int number_of_components) {
           next = g[i][j];
 
       if (scc[node] != scc[next])
-        comp[next] = false;
+        comp[scc[next]] = false;
     }
   }
 
@@ -88,12 +102,21 @@ int dominos_count(int n, int number_of_components) {
   return result;
 }
 
+void clear_graph(int n) {
+  while(--n > -1) {
+    g[n].clear();
+    rev_g[n].clear();
+  }
+}
+
 int main() {
   int t, n, m, x, y, number_of_components;
   cin >> t;
   
   while (t--) {
     cin >> n >> m; 
+
+    clear_graph(n);
 
     while (m--) {
       cin >> x >> y;
