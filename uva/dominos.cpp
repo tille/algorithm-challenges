@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include <vector>
 #include <stack>
 
@@ -62,8 +63,33 @@ void reverse_graph(int n) {
   }
 }
 
+int dominos_count(int n, int number_of_components) {
+  int result = 0;
+
+  // initialize with true
+  bool comp[number_of_components];
+  for (int i = 0; i < number_of_components; ++i) comp[i] = true; 
+
+  for (int i = 0; i < n; ++i) {
+    for (int j =0; j < g[i].size(); ++j) {
+      int node = i,
+          next = g[i][j];
+
+      if (scc[node] != scc[next])
+        comp[next] = false;
+    }
+  }
+
+  for (int i = 0; i < number_of_components; ++i) {
+    if (comp[i] == true)
+      result++;
+  }
+
+  return result;
+}
+
 int main() {
-  int t, n, m, x, y;
+  int t, n, m, x, y, number_of_components;
   cin >> t;
   
   while (t--) {
@@ -74,9 +100,13 @@ int main() {
       g[x-1].push_back(y-1);    
     }
 
+    // set data and apply kosaraju algorithm
     reverse_graph(n);
     topological_sort(n);
-    cout << kosaraju(n) << endl;
+    number_of_components = kosaraju(n);
+
+    // use g and scc to get number of dominos to knock
+    cout << dominos_count(n, number_of_components) << endl;
   }
 
   return 0;
