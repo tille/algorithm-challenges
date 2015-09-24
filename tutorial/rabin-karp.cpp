@@ -11,7 +11,7 @@ int text_keys[K];
 
 // correctly calculates a mod b even if a < 0
 int int_mod(int a, int b) {
-  return (a % C + C) % C;
+  return (a % b + b) % b;
 }
 
 int custom_pot(int x, int n) {
@@ -46,7 +46,6 @@ void fill_text_keys( string text, int m ) {
       text_keys[0] = hashing( text.substr(0, m) );
     else {
       int old_elm = (int(text[it-1]) * custom_pot(b, m-1) % C) % C;
-      // cout << it << "- " << text_keys[it-1] - old_elm << endl; 
       text_keys[it] = (( int_mod(text_keys[it-1] - old_elm, C) * b) % C + int( text[it+m-1] )) % C;
     }
   }
@@ -79,8 +78,7 @@ int main() {
   string text = "((XY(XYX))Y((XY(XYX))YX))";
 
   int found = rabin_karp(text, pattern);
-  cout << text_keys[1] << endl;
-  // cout << "pattern found on the text: " << found << endl;
+  cout << "pattern found on the text: " << found << endl;
   
   return 0;
 }
