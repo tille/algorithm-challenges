@@ -129,6 +129,7 @@ int main() {
     number_of_components = kosaraju(n);
 
     // use g and scc to get number of dominos to knock
+    // answer is the number of in_degree nodes in new components graph
     cout << dominos_count(n, number_of_components) << endl;
   }
 
