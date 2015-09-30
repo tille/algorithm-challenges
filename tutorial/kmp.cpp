@@ -25,6 +25,8 @@ int kmp(string text, string pattern) {
   int seen = 0;
   int matches = 0;
 
+  build_failure_function(pattern);
+
   for (int i = 0; i < text.size(); ++i) {
     while (seen > 0 && text[i] != pattern[seen])
       seen = f[seen - 1];
@@ -42,8 +44,6 @@ int kmp(string text, string pattern) {
 int main() {
   string text, pattern;
   cin >> text >> pattern;
-
-  build_failure_function(pattern);
   cout << kmp(text, pattern) << endl;
   return 0;
 }
