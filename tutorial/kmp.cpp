@@ -7,10 +7,11 @@ using namespace std;
 
 int f[MAXN];
 
-void build_failure_function(string pattern) {
+void build_failure_function(const string &pattern) {
   f[0] = 0;
+  int m = pattern.size();
 
-  for (int i = 1; i < pattern.size(); ++i) {
+  for (int i = 1; i < m; ++i) {
     f[i] = f[i-1];
 
     while (f[i] > 0 && pattern[f[i]] != pattern[i])
@@ -21,22 +22,22 @@ void build_failure_function(string pattern) {
   }
 }
 
-int kmp(string text, string pattern) {
+int kmp(const string &text, const string &pattern) {
   int seen = 0;
   int matches = 0;
+  int n = text.size();
+  int m = pattern.size();
 
   build_failure_function(pattern);
 
-  for (int i = 0; i < text.size(); ++i) {
+  for (int i = 0; i < n; ++i) {
     while (seen > 0 && text[i] != pattern[seen])
       seen = f[seen - 1];
 
     if (text[i] == pattern[seen]) seen++;
 
-    if (seen == pattern.size()) {
+    if (seen == m)
       matches += 1; // match between [i-m+1, i]
-      seen = f[seen - 1];
-    }
   }
   return matches;
 }
