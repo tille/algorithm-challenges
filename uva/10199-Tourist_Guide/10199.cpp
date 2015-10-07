@@ -3,15 +3,16 @@
 using namespace std;
 
 const int MAXN = 105;
-vector<int> g[MAXN];
-int parent[MAXN];
-int low[MAXN];
-int dis[MAXN];
-bool visited[MAXN];
-map<string, int> index_of;
-set<string> results;
-vector<string> locations;
-int total;
+
+vector<int> g[MAXN]; // graph
+int parent[MAXN]; // parent of each node after dfs
+int low[MAXN]; // low node that can reach me
+int dis[MAXN]; // my position in the tree
+bool visited[MAXN]; 
+map<string, int> index_of; // my index position
+set<string> results; // results, yay!
+string locations[MAXN]; // my name
+int total; // number of nodes discovered in the graph
 
 void ap(int u) {
   visited[u] = true;
@@ -19,50 +20,49 @@ void ap(int u) {
   low[u] = dis[u] = ++total;
 
   for (int i = 0; i < g[u].size(); ++i) {
-    int next = g[u][i];
+    int v = g[u][i];
     
-    if (!visited[next]) {
+    if (!visited[v]) {
       children++;
-      parent[next] = u;
+      parent[v] = u;
 
-      ap(next);
+      ap(v);
 
       if (parent[u] == -1 && children > 1) 
         results.insert(locations[u]);
 
-      if (parent[u] != -1 && dis[u] <= low[next])
+      if (parent[u] != -1 && low[v] >= dis[u])
         results.insert(locations[u]);
 
-      low[u] = min(low[u], low[next]); 
-    } else if (parent[u] != next)
-      low[u] = min(dis[next], low[u]);
+      low[u] = min(low[u], low[v]); 
+    } else if (v != parent[u])
+      low[u] = min(low[u], dis[v]);
   }
+}
+
+void clear_all() {
+  for (int i = 0; i < MAXN; ++i) {
+    g[i].clear();
+    parent[i] = -1;
+    visited[i] = false;
+    index_of.clear();
+  }
+
+  results.clear();
 }
 
 int main() {
   int n, r, test_case = 0;
 
   while (cin >> n && n) {
-    int cpy_n = n;
-    int node = 0;
-    string location;
+    if(test_case > 0) puts("");
+    clear_all();
 
     test_case++;
 
-    // reset all
-    results.clear();
-    locations.clear();
-    for (int i = 0; i < n+2; ++i) {
-      g[i].clear();
-      parent[i] = -1;
-      visited[i] = false;
-      index_of.clear();
-    }
-
-    while (n--) {
-      cin >> location;
-      locations.push_back(location);
-      index_of[location] = node++;
+    for (int i = 0; i < n; ++i) {
+      cin >> locations[i];
+      index_of[ locations[i] ] = i;
     }
 
     cin >> r;
@@ -74,10 +74,14 @@ int main() {
       int node_b = index_of[to];
 
       g[node_a].push_back(node_b);
+      g[node_b].push_back(node_a);
     }
     
     total = 0;
-    ap(0);
+
+    for (int i = 0; i < n; ++i) {
+      if (visited[i] == false) ap(i);
+    }
 
     set <string> :: iterator it;
     printf("City map #%d: %d camera(s) found\n", test_case, int(results.size()) );
@@ -85,8 +89,6 @@ int main() {
     for (it = results.begin(); it != results.end(); ++it) {
       cout << *it << endl;
     }
-
-    puts("");
   }
   return 0;
 }
