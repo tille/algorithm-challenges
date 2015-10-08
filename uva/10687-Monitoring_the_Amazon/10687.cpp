@@ -5,7 +5,7 @@ using namespace std;
 #define MAXN 20000
 
 typedef pair<int, int> point;
-typedef pair<int, int> dist_point; // dist, point index (ordered)
+typedef pair<double, int> dist_point; // dist, point index (ordered)
 set<point> points;
 vector<int> g[MAXN];
 int visited[MAXN];
@@ -34,20 +34,22 @@ void create_graph() {
 
       int c1 = (*i).first - (*j).first;
       int c2 = (*i).second - (*j).second;
-      int dist = sqrt(c1*c1 + c2*c2); // dist between *i and *j
+      double dist = sqrt(c1*c1 + c2*c2); // dist between *i and *j
 
       results.insert( dist_point(dist, v) );
     }
 
     int s = points.size();
+    set<dist_point> :: iterator it;
+
     if (s >= 1) {
-      j = results.begin();
-      g[u].push_back( (*j).second );
+      it = results.begin();
+      g[u].push_back( (*it).second );
     }
 
     if (s >= 2) {
-      j = results.begin(); j++;
-      g[u].push_back( (*j).second );
+      it = results.begin(); it++;
+      g[u].push_back( (*it).second );
     }
   }
 }
