@@ -21,7 +21,7 @@ bool update_dist(int n) {
       int next = g[u][v].to;
       int weight = g[u][v].weight;
 
-      if(dist[u] >= 1<<30) continue;
+      if(dist[u] >= 1<<30) continue; // avoid overflow at plus INF + weight
 
       // if (dist[next] > dist[u] + weigth) prev[next] = u;
       if (dist[next] > dist[u] + weight) {
