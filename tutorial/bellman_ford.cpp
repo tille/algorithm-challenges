@@ -33,7 +33,7 @@ bool update_dist(int n) {
   return updated;
 }
 
-// receives 'start' and number and of nodes in the graph
+// receives 'start' and number of nodes in the graph
 void bellman_ford(int s, int n) {
   for (int u = 0; u <= n; ++u) {
     dist[u] = 1<<30;
@@ -50,4 +50,4 @@ void bellman_ford(int s, int n) {
 // usage: bellman_ford(0, n)
 // if there is no negative cycles then dist[n-1] is the shortest path
 // after bellman_ford if you run update_dist(n) and returns true then there is a negative cycle
-// if dist[n-1] == 1<<30 there no path to reach such node.
+// if dist[n-1] == 1<<30 there is no path to reach such node.
