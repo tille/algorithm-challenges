@@ -2,52 +2,66 @@
 
 using namespace std;
 
-string s;
-int number_1s;
+#define MAXN 29
 
-int coef(int i, int j) {
-  return 1;
+string s;
+long long number_1s = 0;
+long long C[MAXN][MAXN];
+
+void binomial() {
+  C[0][0] = 1;
+  for (long long i = 1; i <= MAXN; ++i){
+    for (long long j = 0; j <= MAXN; ++j) {
+      C[i][j] = C[i-1][j];
+      if (j > 0) C[i][j] += C[i-1][j-1];
+    }
+  }
 }
 
-int g(int i, int j) {
-  int res;
+long long g(long long i, long long j) {
+  long long res;
 
-  if (i == 0) res = 0;
-  else if (s[i] == '1') res = coef(i-1, j) + g(i-1, j-1);
+  if (i == 0 || j < 0) res = 0;
+  else if (s[i] == '1') res = C[i-1][j] + g(i-1, j-1);
   else if (s[i] == '0') res = g(i-1, j);
 
   return res;
 }
 
-int f(int i, int j) {
-  int res = 0;
+long long f(long long i, long long j) {
+  long long res = 0;
 
-  for (int k = 3; k <= j; ++k) res += g(i, k);
+  for (long long k = 3; k <= i; k+=3) res += g(i, k);
   if (number_1s % 3 == 0) res++;
 
   return res;
 }
 
-string to_binary( int n ) {
+string to_binary(long long n) {
   string result = " ";
   string binary_digit;
+  number_1s = 0;
 
   if ( n == 0 ) return "0";
 
   while( n != 0 ) {
     binary_digit = ( n%2 == 0 ) ? "0" : "1" ;
-    result += binary_digit;
+    result = result + binary_digit;
+    if (binary_digit == "1") number_1s++;
     n = n/2;
   }
   s = result;
 }
 
 int main() {
-  int n;
+  long long n, result;
+  binomial();
 
-  cin >> n;
-
-  to_binary(n);
+  while (cin >> n) {
+    to_binary(n);
+    result = f(s.size()-1, 3);
+    printf("Day %lld: Level = %lld\n", n, result);
+  }
 
   return 0;
 }
