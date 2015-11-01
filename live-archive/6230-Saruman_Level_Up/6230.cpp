@@ -3,78 +3,86 @@
 using namespace std;
 
 #define MAXN 57
+#define ll long long
 
-string s;
-long long number_1s = 0;
-long long C[MAXN][MAXN];
+string s; // binary representation of n
+
+ll C[MAXN][MAXN];
+ll dp[MAXN][MAXN];
+
+int count_ones;
 
 void binomial() {
   C[0][0] = 1;
-  for (long long i = 1; i <= MAXN; ++i){
-    for (long long j = 0; j <= MAXN; ++j) {
+
+  for(int i = 1; i < MAXN; ++i) C[0][i] = 0;
+
+  for (int i = 1; i < MAXN; ++i){
+    for (int j = 0; j < MAXN; ++j) {
       C[i][j] = C[i-1][j];
       if (j > 0) C[i][j] += C[i-1][j-1];
     }
   }
 }
 
-// int tales;
-long long g(long long i, long long j) {
-  long long res;
+void fill_dp(int n) {
+  for (int i = 0; i <= n; ++i) dp[0][i] = dp[i][0] = 0;
 
-  // if (!tales) 
-    // cout << "i: " << i << " j: " << j << endl;
+  for (int i = 1; i <= n; ++i) {
+    for (int j = 0; j <= n; ++j) {
+      dp[i][j] = dp[i-1][j];
 
-  if (i <= 0 || j <= 0) res = 0;
-  else if (s[i] == '1') res = C[i-1][j] + g(i-1, j-1);
-  else if (s[i] == '0') res = g(i-1, j);
-
-  // tales = 1;
-
-  return res;
-}
-
-long long f(long long i, long long j) {
-  long long res = 0;
-  // tales = 0;
-
-  if (i < 1) return 0;
-  for (long long k = 3; k <= i; k+=3) {
-    res += g(i, k);
-    // cout << i << " " << j << " " << g(i, k) << endl;
+      if (s[i] == '1') { 
+        dp[i][j] = C[i-1][j];
+        if (j > 0) dp[i][j] += dp[i-1][j-1];
+      }
+    }
   }
-  if (number_1s % 3 == 0) res++;
-
-  return res;
 }
 
-string to_binary(long long n) {
+void to_binary(ll n) {
   string result = " ";
   string binary_digit;
-  number_1s = 0;
+  count_ones = 0;
 
-  if ( n == 0 ) return "0";
-
-  while( n != 0 ) {
-    binary_digit = ( n%2 == 0 ) ? "0" : "1" ;
-    result = result + binary_digit;
-    if (binary_digit == "1") number_1s++;
-    n = n/2;
+  if (!n) {
+    s = "0";
+    return ;
   }
+
+  while (n) {
+    if (n%2) {
+      result += "1";
+      count_ones++;
+    } else {
+      result += "0";
+    }
+
+    n /= 2;
+  }
+
   s = result;
 }
 
 int main() {
-  long long n, result;
+  ll n, ans;
   binomial();
 
   while (cin >> n) {
-    to_binary(n);
-    // cout << s << endl;
-    result = f(s.size()-1, 3);
-    printf("Day %lld: Level = %lld\n", n, result);
-    // cout << result << endl;
-  }
+    to_binary(n); 
+    
+    ans = 0;
+    int i = s.size()-1;
 
+    fill_dp(i); // apply bottom up
+
+    for (int j = 3; j <= i; j += 3) {
+      ans += dp[i][j];
+    }
+
+    if (count_ones && !(count_ones % 3)) ans++;
+
+    printf("Day %llu: Level = %llu\n", n, ans);
+  }
   return 0;
 }
