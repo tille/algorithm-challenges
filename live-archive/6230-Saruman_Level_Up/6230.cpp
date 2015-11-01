@@ -2,7 +2,7 @@
 
 using namespace std;
 
-#define MAXN 29
+#define MAXN 57
 
 string s;
 long long number_1s = 0;
@@ -18,20 +18,31 @@ void binomial() {
   }
 }
 
+// int tales;
 long long g(long long i, long long j) {
   long long res;
 
-  if (i == 0 || j < 0) res = 0;
+  // if (!tales) 
+    // cout << "i: " << i << " j: " << j << endl;
+
+  if (i <= 0 || j <= 0) res = 0;
   else if (s[i] == '1') res = C[i-1][j] + g(i-1, j-1);
   else if (s[i] == '0') res = g(i-1, j);
+
+  // tales = 1;
 
   return res;
 }
 
 long long f(long long i, long long j) {
   long long res = 0;
+  // tales = 0;
 
-  for (long long k = 3; k <= i; k+=3) res += g(i, k);
+  if (i < 1) return 0;
+  for (long long k = 3; k <= i; k+=3) {
+    res += g(i, k);
+    // cout << i << " " << j << " " << g(i, k) << endl;
+  }
   if (number_1s % 3 == 0) res++;
 
   return res;
@@ -59,8 +70,10 @@ int main() {
 
   while (cin >> n) {
     to_binary(n);
+    // cout << s << endl;
     result = f(s.size()-1, 3);
     printf("Day %lld: Level = %lld\n", n, result);
+    // cout << result << endl;
   }
 
   return 0;
