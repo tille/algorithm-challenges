@@ -5,34 +5,39 @@ using namespace std;
 #define ll long long
 #define MAXN 100005
 
-int main() {
-  int t;
-  ll n, num, ans, back;
-  deque<ll> nums;
-  map<ll, ll> pos;
+vector<pair<ll, ll> > g[2];
 
-  scanf("%llu", &t);
+int main() {
+  ll t, n, num;
+
+  cin >> t;
 
   while (t--) {
-    nums.clear();
-    pos.clear();
-    ans = 0;
+    g[0].clear(); g[1].clear();
 
-    scanf("%llu", &n);
+    cin >> n;
+    ll k = 0;
+    ll ans = 0;
+    set<ll> visited;
 
-    for (ll i = 1; i <=n; ++i) {
-      scanf("%llu", &num);
-      if (!pos[num]) {
-        pos[num] = i;
-        nums.push_front(num);
+    for (ll i = 0; i < n; ++i) {
+      visited.clear();
+      cin >> num;
+
+      g[k].push_back(make_pair(num, i));
+      g[(k+1)%2].clear(); //clear vector before fill it
+
+      for (ll j = 0; j < g[k].size(); ++j) {
+        ll cur_gcd = __gcd(g[k][j].first, num);
+
+        if (!visited.count(cur_gcd)) {
+          visited.insert(cur_gcd);
+          g[(k+1)%2].push_back(make_pair(cur_gcd, g[k][j].second));
+        }
+
+        ans = max(ans, cur_gcd * (i - g[k][j].second + 1));
       }
-
-      for (ll j = 0; j < nums.size(); ++j) {
-        ll cur = __gcd(num, nums[j]);
-        if (j > 0) cur = __gcd(cur, back);
-        ans = max(ans, cur * (i - pos[nums[j]] + 1));
-        back = cur;
-      } 
+      k = (k+1)%2;
     }
 
     cout << ans << endl;
