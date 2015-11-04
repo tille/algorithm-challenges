@@ -3,37 +3,39 @@
 using namespace std;
 
 #define ll long long
-const int MAXN = 100005;
-
-ll nums[MAXN];
-
-ll calc(ll n) {
-  ll ans = 0, cur, back;
-
-  for (int i = 1; i <= n; ++i) {
-    for (int j = i; j >= 1; --j) {
-      cur = __gcd(nums[i], nums[j]);
-      if (j < i) cur = __gcd(cur, back);
-
-      ans = max(ans, cur * (i-j+1));
-      back = cur;
-    }
-  }
-  return ans;
-}
+#define MAXN 100005
 
 int main() {
   int t;
-  ll n;
+  ll n, num, ans, back;
+  deque<ll> nums;
+  map<ll, ll> pos;
 
   scanf("%llu", &t);
 
   while (t--) {
+    nums.clear();
+    pos.clear();
+    ans = 0;
+
     scanf("%llu", &n);
-    for (int i = 1; i <=n; ++i) {
-      scanf("%llu", &nums[i]);
+
+    for (ll i = 1; i <=n; ++i) {
+      scanf("%llu", &num);
+      if (!pos[num]) {
+        pos[num] = i;
+        nums.push_front(num);
+      }
+
+      for (ll j = 0; j < nums.size(); ++j) {
+        ll cur = __gcd(num, nums[j]);
+        if (j > 0) cur = __gcd(cur, back);
+        ans = max(ans, cur * (i - pos[nums[j]] + 1));
+        back = cur;
+      } 
     }
-    printf("%llu\n", calc(n));
+
+    cout << ans << endl;
   }
 
   return 0;
