@@ -20,11 +20,9 @@ int main() {
     dp = sqrt(d);
     dt = sqrt(x*x + y*y);
 
-    if (dp > dt) ans = 2;
-    else ans = ceil(dt/dp);
-    // if (dt/dp - floor(dt/dp) < 1e-9) ans = dt / dp;
-    // else if (dt > dp) ans = floor(dt / dp) + 1;
-    // else ans = 2; 
+    if (dt/dp - floor(dt/dp) < 1e-9) ans = dt / dp;
+    else if (dt > dp) ans = floor(dt / dp) + 1;
+    else ans = 2; 
     cout << ans << endl;
   }
   return 0;
