@@ -9,13 +9,11 @@ typedef vector<ii> vii;
 #define REP(i, a, b) for (int i = int(a); i <= int(b); i++)
 #define TRmsi(c, it) for (msi::iterator it = (c).begin(); it != (c).end(); it++)
 
-string s;
-
 int main() {
   ios_base::sync_with_stdio(false); cin.tie(NULL);
+  string s;
   while (cin >> s) {
-    sort(s.begin(), s.end());
-    cout << s << endl;
+    cout << s[s.size() - 1] << endl;
   }
   return 0;
 }

@@ -15,9 +15,9 @@ int next(int u) {
 int main() {
   ios_base::sync_with_stdio(false); cin.tie(NULL);
 
-  cin >> t;
-  while (t--) {
-    cin >> s;
+  // cin >> t;
+  while (cin >> s) {
+    // cin >> s;
     sort(s.begin(), s.end());
 
     n = s.size(); ans = ""; f.clear();
@@ -52,7 +52,6 @@ int main() {
         f[s[l]]--;
       } else l = next(l);
     }
-    // cout << ans << endl;
 
     if (ans.size() == s.size()) {
       cout << ans << endl;
