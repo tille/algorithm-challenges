@@ -4,46 +4,14 @@ using namespace std;
 
 typedef long long ll;
 typedef vector<int> vi;
+typedef pair<int, int> ii;
 
 #define REP(i, a, b) for (int i = int(a); i <= int(b); i++)
-#define TRmsi(c, it) for (msi::iterator it = (c).begin(); it != (c).end(); it++)
 
-struct state {
-  int categorization[15], score, bitmask1, bitmask2, target;
-
-  state() {
-    score = bitmask1 = bitmask2 = 0;
-    target = (1 << 13) - 1;
-    REP(i, 0, 14) categorization[i] = -1;
-  }
-
-  bool perfect() {
-    if (bitmask1 == target && bitmask2 == target) {
-      int bonus = (categorization[6] >= 63) ? 35 : 0;
-      categorization[13] = bonus;
-      score += bonus;
-      return true;
-    }
-    return false;
-  }
-
-  void add(int pj, int c, int value) {
-    bitmask1 |= (1 << pj);
-    bitmask2 |= (1 << c);
-    categorization[c] = value;
-    score += value;
-  }
-
-  bool operator < (const state &other) const {
-    return score < other.score;
-  }
-};
-
-map<state, int> memo;
 int d[5], r = 0, target;
 int cost[15][15];
-state ans;
-vector<int> rp;
+vi rp;
+map<ii, vi> memo;
 
 bool three_of_a_kind() {
   return (d[0] == d[2] or d[1] == d[3] or d[2] == d[4]);
@@ -59,19 +27,28 @@ bool five_of_a_kind() {
 
 bool short_straight() {
   int n = rp.size();
-  bool p1 = (n >= 4 && (rp[0] + 3) == rp[3]);
-  bool p2 = (n == 6 && (rp[1] + 3) == rp[4]);
-  return (p1 or p2);
+  bool p1 = (n == 4 && (rp[0] + 3) == rp[3]);
+  bool p2 = (n == 5 && (rp[1] + 3) == rp[4]);
+  bool p3 = (n == 5 && (rp[0] + 3) == rp[3]);
+  return (p1 or p2 or p3);
 }
 
 bool long_straight() {
-  return rp.size() == 5 && ((rp[0] + 4) == rp[4]);
+  return (rp.size() == 5) && ((rp[0] + 4) == rp[4]);
 }
 
 bool full_house() {
-  bool p1 = rp.size() == 2 && (cost[r][rp[0] - 1] / rp[0]) > 1;
-  bool p2 = rp.size() == 2 && (cost[r][rp[0] - 1] / rp[1]) > 1;
-  return p1 && p2;
+  if (rp.size() == 1) return true;
+  if (rp.size() != 2) return false;
+
+  int cnt[2] = {0, 0};
+  REP(i, 0, 4) {
+    if (d[i] == rp[0]) cnt[0]++;
+    else cnt[1]++;
+  }
+  bool p1 = cnt[0] == 3 && cnt[1] == 2;
+  bool p2 = cnt[1] == 3 && cnt[0] == 2;
+  return p1 or p2;
 }
 
 void round_score() {
@@ -96,29 +73,35 @@ void round_score() {
   if (full_house()) cost[r][12] = 40;
 }
 
-int matching(state &cur) {
-  if (memo[cur]) 
-    return memo[cur];
+vi matching(int bitmask, int c) {
+  ii key;
+  vi ans(15, 0);
+  map<ii, vi>::iterator it;
 
-  if (cur.perfect()) {
-    if (cur.score > ans.score) 
-      ans = cur; 
-    return memo[cur] = cur.score;
-  }
+  if (bitmask == target)
+    return ans;
 
-  int pj, c, res = -1;
-  for (pj = 0; pj < 13; ++pj) 
-    if (!(cur.bitmask1 & (1 << pj)))
-      break;
+  key = make_pair(bitmask, c);
+  it = memo.find(key);
 
-  for (c = 0; c < 13; ++c) {
-    if (!(cur.bitmask2 & (1 << c))) {
-      state next = cur;
-      next.add(pj, c, cost[pj][c]);
-      res = max(res, matching(next));
+  if (it != memo.end())
+    return it->second;
+
+  for (int i = 0; i < 13; ++i) {
+    if (!(bitmask & (1 << i))) {
+      vi res = matching(bitmask | (1 << i), c - 1);
+      res[c] = cost[i][c];
+      res[14] += res[c];
+
+      if (c == 5) {
+        res[13] = (res[14] >= 63) ? 35 : 0;
+        res[14] += res[13];
+      }
+
+      if (res[14] > ans[14]) ans = res;
     }
   }
-  return memo[cur] = res;
+  return memo[key] = ans;
 }
 
 int main() {
@@ -126,14 +109,16 @@ int main() {
   cin.tie(NULL);
 
   while (cin >> d[0] >> d[1] >> d[2] >> d[3] >> d[4]) {
+    REP(j, 0, 12) cost[r][j] = 0;
     round_score();
 
     if (r == 12) {
       memo.clear();
-      state ini = state();
+      target = (1 << 13) - 1;
+      vi sol = matching(0, 12);
 
-      ans = ini;
-      cout << matching(ini) << endl;
+      REP(i, 0, 13) cout << sol[i] << " ";
+      cout << sol[14] << endl;
     }
     r = (r + 1) % 13;
   }
