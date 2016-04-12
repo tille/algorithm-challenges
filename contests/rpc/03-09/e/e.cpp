@@ -14,7 +14,6 @@ int main() {
 
   while (cin >> n >> t >> d) {
     getline(cin, res); // endline
-    if (d == 'L') t = t * -1; 
 
     getline(cin, edge);
     getline(cin, line);
@@ -22,6 +21,8 @@ int main() {
 
     cout << edge << endl;
 
+    // res only have the characters
+    // ans is an empty string with res lenght
     res = "";
     string ans = "";
     REP(i, 0, line.size() - 1) {
@@ -31,11 +32,15 @@ int main() {
       }
     }
 
+    // walk through res moving each character to its position and saving it in ans
+    t = t % n; 
+    if (d == 'L') t = t * -1; 
     REP(i, 0, res.size() - 1) { 
       ll pos = (i + t + res.size()) % res.size();
       ans[pos] = res[i];
     }
 
+    // print results
     REP(i, 0, line.size() - 1) {
       if (i % 2) cout << ans[int(i / 2)];
       else cout << '|';
