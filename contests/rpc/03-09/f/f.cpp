@@ -4,57 +4,56 @@ using namespace std;
 
 typedef long long ll;
 typedef pair<int, int> ii;
-typedef vector<ii> vii; 
 
 #define REP(i, a, b) for (int i = int(a); i <= int(b); i++)
-#define TRmsi(c, it) for (msi::iterator it = (c).begin(); it != (c).end(); it++)
+#define MAXN 3000000
 
-map<ii, int> v;
-map<int, int> memo;
+int memo[MAXN + 1];
+int gauss[3000];
 
 int g(int n) {
-  return (n * (n + 1)) / 2;
+  if (gauss[n] != -1) return gauss[n];
+  return gauss[n] = (n * (n + 1)) / 2;
 }
 
-int bfs(int n, int c) {
-  queue<ii> q;
-  ii ini = make_pair(0, 0);
-  q.push(ini);
+void bfs(int tot) {
+  queue<int> q;
 
-  if (memo.find(n) != memo.end()) 
-    return memo[n];
+  for (int i = 1; g(i) <= MAXN; ++i) {
+    tot++;
+    q.push(g(i));
+    memo[g(i)] = 1;
+  }
   
   while (q.size()) {
-    int cur = q.front().first;
-    int cost = q.front().second;
+    int cur = q.front();
     q.pop();
 
-    for (int i = 1; g(i) + cur <= n; ++i) {
+    if (tot == MAXN) return ;
+
+    for (int i = 1; g(i) <= cur; ++i) {
       int next = cur + g(i);
 
-      if (memo.find(next) != memo.end()) memo[next] = cost + 1;
-      if (next == n) return memo[n] = cost + 1;
-      if (memo.find(n - next) != memo.end()) return memo[n] = memo[n - next] + cost + 1;
-
-      ii nxt = make_pair(next, cost + 1);
-      
-      if (v.find(nxt) == v.end()) {
-        v[nxt] = 1;
-        q.push(nxt);
+      if (next <= MAXN && memo[next] == -1) {
+        tot++;
+        memo[next] = memo[cur] + 1;
+        q.push(next);
       }
     }
   }
-  return 0; // should never get here
 }
 
 int main() {
   ios_base::sync_with_stdio(false); 
   cin.tie(NULL);
+
   int n;
+  memset(memo, -1, sizeof memo);
+  memset(gauss, -1, sizeof gauss);
+  bfs(0);
   
   while (cin >> n) {
-    v.clear();
-    cout << bfs(n, 0) << endl;
+    cout << memo[n] << endl;
   }
   return 0;
 }
