@@ -1,111 +1,75 @@
-#include <algorithm>
-#include <iostream>
-#include <iterator>
-#include <sstream>
-#include <fstream>
-#include <cassert>
-#include <climits>
-#include <cstdlib>
-#include <cstring>
-#include <string>
-#include <cstdio>
-#include <vector>
-#include <cmath>
-#include <queue>
-#include <deque>
-#include <stack>
-#include <list>
-#include <map>
-#include <set>
-
+#include <bits/stdc++.h>
 using namespace std;
 
-#define MAXN 100002
+typedef vector<int> vi; 
 
-int visited[MAXN];
-int scc[MAXN];
+#define REP(i, a, b) for (int i = int(a); i <= int(b); i++)
+#define maxn 10005
 
-vector<int> g[MAXN];
-vector<int> rev_g[MAXN];
+int cost[maxn], scc[maxn];
+bool seen[maxn];
+vi g[maxn], grev[maxn], topo;
 
-vector<int> path;
-
-void dfs(int node) {
-  visited[node] = true;
-  for (int i = 0; i < g[node].size(); ++i) {
-    int next = g[node][i];
-    if(!visited[next]) dfs(next);
+int dfs(int u) {
+  seen[u] = true;
+  REP(i, 0, g[u].size() - 1) {
+    int v = g[u][i];
+    if (!seen[v]) dfs(v);
   }
-  path.push_back(node);
+  topo.push_back(u);
 }
 
-void topological_sort(int n) {
-  path.clear();
-  for (int i = 0; i < n+2; ++i) visited[i] = false;
-  for (int i = 0; i < n; ++i) if(!visited[i]) dfs(i);
-  reverse(path.begin(), path.end());
-}
-
-void dfs_2 (int node, int set_label) {
-  scc[node] = set_label;
-  for (int i = 0; i < rev_g[node].size(); ++i ) {
-    int next = rev_g[node][i];
-    
-    if (scc[next] == -1) 
-      dfs_2(next, set_label);
+int dfs2(int u, int comp) {
+  scc[u] = comp;
+  REP(i, 0, grev[u].size() - 1) {
+    int v = grev[u][i];
+    if (scc[v] == -1) dfs2(v, comp);
   }
 }
 
-int kosaraju(int n) {
-  for (int i = 0; i < n+2; ++i) scc[i] = -1;
-
-  int set_label = 0;
-  for (int i = 0; i < path.size(); ++i) {
-    int node = path[i];
-
-    if (scc[node] == -1) 
-      dfs_2(node, set_label++);
-  }
-  return set_label;
-}
-
-void reverse_graph(int n) {
-  for (int i = 0; i < n; ++i) {
-    for (int j = 0; j < g[i].size(); ++j) {
-      int node = g[i][j];
-      rev_g[node].push_back(i);
+int kos(int n) {
+  REP(i, 0, n - 1) { 
+    REP(j, 0, g[i].size() - 1) {
+      int v = g[i][j]; 
+      grev[v].push_back(i);
     }
   }
-}
 
-void clear_graph(int n) {
-  while(--n > -1) {
-    g[n].clear();
-    rev_g[n].clear();
+  REP(i, 0, n - 1) if (!seen[i]) dfs(i);
+  reverse(topo.begin(), topo.end());
+
+  int comp = 0;
+  REP(i, 0, n - 1) {
+    int u = topo[i];
+    if (scc[u] == -1) dfs2(u, comp++);
   }
+  return comp;
 }
 
 int main() {
-  int t, n, m, x, y, number_of_components;
+  ios_base::sync_with_stdio(false); 
+  cin.tie(NULL);
+
+  int t, x , y, n, m;
   cin >> t;
-  
+
   while (t--) {
-    cin >> n >> m; 
+    cin >> n >> m;
 
-    clear_graph(n);
+    REP(i, 0, n) g[i].clear(), grev[i].clear();
 
-    while (m--) {
+    REP(j, 0, m - 1) {
       cin >> x >> y;
-      g[x-1].push_back(y-1);    
+      g[x].push_back(y);
     }
 
-    // set data and apply kosaraju algorithm
-    reverse_graph(n);
-    topological_sort(n);
-    number_of_components = kosaraju(n);
-
-    cout << number_of_components << endl;
+    topo.clear();
+    REP(i, 0, n) {
+      scc[i] = -1;
+      seen[i] = false;
+    }
+    cout << kos(n) << endl;
   }
-
   return 0;
 }
+
