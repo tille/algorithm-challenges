@@ -1,0 +1,4 @@
+Here are the steps to convert hex to decimal:
+Get the decimal equivalent of hex from table.
+Multiply every digit with 16 power of digit location. (zero based, 7DE: E location is 0, D location is 1 and the 7 location is 2)
+Sum all the multipliers.
