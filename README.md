@@ -1,7 +1,7 @@
 # algorithm-challenges
-Solutions to some data structures and algorithm challenges written by me during [2009 - 2016].
+Solutions to some data structures and algorithm challenges written by me among [2009 - 2016].
 
-It was such a trip tru the hardest know-problems in computer science, great minds, great algorithms, amazing places
+It was such a trip tru the hardest known-problems in computer science, great minds, great algorithms, amazing places
 and extraordinary people.
 
 The competitive programming journey will always be in my memories,
