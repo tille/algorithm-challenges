@@ -6,3 +6,5 @@ and extraordinary people.
 
 The competitive programming journey will always be in my memories,
 I would leave this repo active as reference for new contesters and will be eventualy updated.
+
+[![World Champions IBM-ICPC and Google CodeJam](https://github.com/Tille/Computer-Graphic/raw/master/picks/champions.jpg)]
