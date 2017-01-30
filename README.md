@@ -22,3 +22,7 @@ World Champions IBM-ICPC
 National programming contest - Enrolled as Couch
 -----------
 [![World Champions IBM-ICPC](https://github.com/Tille/algorithm-challenges/raw/master/photos/couch.jpg)](https://raw.githubusercontent.com/Tille/algorithm-challenges/master/photos/couch.jpg)
+
+Google
+-----------
+[![World Champions IBM-ICPC](https://github.com/Tille/algorithm-challenges/raw/master/photos/google.jpg)](https://raw.githubusercontent.com/Tille/algorithm-challenges/master/photos/google.jpg)
