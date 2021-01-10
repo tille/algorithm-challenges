@@ -22,9 +22,8 @@ int main() {
   while (t--) {
     ll n;
     cin >> n;
-    REP(i,0,n-1) {
+    REP(i,0,n-1)
       cout << (8 + abs(1 - i)) % 10;
-    }
     cout << endl;
   }
   return 0;
